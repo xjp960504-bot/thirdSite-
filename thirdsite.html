@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科技感格言時鐘</title>
+    <style>
+        /* 全域背景：科幻感深色漸層 */
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle, #101524 0%, #050811 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+            overflow: hidden;
+        }
+
+        /* 主卡片：半透明玻璃擬態 + 霓虹外框 */
+        .card-container {
+            display: flex;
+            width: 800px;
+            height: 420px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(10, 15, 30, 0.7);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.15), inset 0 0 15px rgba(0, 242, 254, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* 左側：精選佳句區（神祕暗紫調） */
+        .quote-section {
+            flex: 1.2;
+            background: linear-gradient(135deg, rgba(26, 11, 46, 0.6) 0%, rgba(13, 7, 26, 0.8) 100%);
+            border-right: 1px solid rgba(157, 78, 221, 0.3);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .quote-title {
+            color: #9d4ede; /* 科技紫 */
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(157, 78, 221, 0.6);
+            border-bottom: 2px solid #9d4ede;
+            padding-bottom: 8px;
+        }
+
+        .quote-text {
+            color: #e0e6ed;
+            font-size: 19px;
+            line-height: 1.8;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(224, 230, 237, 0.3);
+        }
+
+        /* 右側：時鐘與日曆區（未來螢光藍） */
+        .clock-section {
+            flex: 0.8;
+            background: linear-gradient(45deg, rgba(6, 18, 36, 0.4) 0%, rgba(11, 31, 61, 0.4) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            padding: 30px 0;
+        }
+
+        /* 科技感時鐘外圈 */
+        .analog-clock {
+            width: 140px;
+            height: 140px;
+            border: 2px solid #00f2fe;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4), inset 0 0 15px rgba(0, 242, 254, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* 時鐘指針通用樣式 */
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            background-color: #00f2fe;
+            border-radius: 4px;
+            box-shadow: 0 0 8px #00f2fe;
+        }
+
+        .hour-hand {
+            width: 4px;
+            height: 35px;
+            margin-left: -2px;
+            background-color: #9d4ede;
+            box-shadow: 0 0 8px #9d4ede;
+        }
+
+        .minute-hand {
+            width: 3px;
+            height: 50px;
+            margin-left: -1.5px;
+        }
+
+        .second-hand {
+            width: 1px;
+            height: 55px;
+            background-color: #ff007f; /* 螢光粉紅秒針 */
+            margin-left: -0.5px;
+            box-shadow: 0 0 10px #ff007f;
+        }
+
+        /* 時鐘中心點 */
+        .clock-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background-color: #ff007f;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 8px #ff007f;
+        }
+
+        /* 數位時間：電子儀表板風格 */
+        .digital-time {
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            padding: 6px 24px;
+            border-radius: 4px;
+            font-size: 20px;
+            color: #00f2fe;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
+        }
+
+        /* 科技感日曆 */
+        .calendar {
+            width: 140px;
+            background: rgba(5, 10, 20, 0.8);
+            border-radius: 6px;
+            border: 1px solid rgba(157, 78, 221, 0.4);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .calendar-month {
+            background-color: rgba(157, 78, 221, 0.3);
+            color: #c77dff;
+            font-size: 14px;
+            padding: 6px 0;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(157, 78, 221, 0.4);
+            text-shadow: 0 0 5px rgba(157, 78, 221, 0.5);
+        }
+
+        .calendar-date {
+            font-size: 44px;
+            font-weight: bold;
+            color: #ffffff;
+            padding: 10px 0 2px 0;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        }
+
+        .calendar-day {
+            font-size: 13px;
+            color: #9d4ede;
+            padding-bottom: 10px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(157, 78, 221, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <div class="quote-section">
+            <div class="quote-title">SYSTEM // QUOTE</div>
+            <div class="quote-text" id="quote-box">「所有的起點，都是從決定嘗試的那一刻開始的。」</div>
+        </div>
+
+        <div class="clock-section">
+            <div class="analog-clock">
+                <div class="hand hour-hand" id="hour"></div>
+                <div class="hand minute-hand" id="min"></div>
+                <div class="hand second-hand" id="sec"></div>
+                <div class="clock-center"></div>
+            </div>
+
+            <div class="digital-time" id="digital">00:00:00</div>
+
+            <div class="calendar">
+                <div class="calendar-month" id="cal-month">01 MONTH</div>
+                <div class="calendar-date" id="cal-date">01</div>
+                <div class="calendar-day" id="cal-day">星期一</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ======= 1. 自動更換格言功能 =======
+        const quotes = [
+            "「所有的起點，都是從決定嘗試的那一刻開始的。」",
+            "「不要等待機會，而要創造機會。」",
+            "「成功不是將來才有的，而是從決定去做的那一刻起，持續累積而成。」",
+            "「未來並非不可預測，它正由你當下的每一個選擇所塑形。」",
+            "「在數據與代碼的洪流中，唯有初心能指引前進的方向。」"
+        ];
+
+        // 隨機抽選格言
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        document.getElementById('quote-box').innerText = randomQuote;
+
+
+        // ======= 2. 即時時鐘與日曆功能 =======
+        function updateClock() {
+            const now = new Date();
+            
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // --- 數位時鐘更新 ---
+            const formatSec = seconds < 10 ? '0' + seconds : seconds;
+            const formatMin = minutes < 10 ? '0' + minutes : minutes;
+            const formatHour = hours < 10 ? '0' + hours : hours;
+            document.getElementById('digital').innerText = `${formatHour}:${formatMin}:${formatSec}`;
+
+            // --- 模擬時鐘指針旋轉角度計算 ---
+            const secDegrees = (seconds / 60) * 360;
+            const minDegrees = (minutes / 60) * 360 + (seconds / 60) * 6;
+            const hourDegrees = (hours / 12) * 360 + (minutes / 60) * 30;
+
+            document.getElementById('sec').style.transform = `rotate(${secDegrees}deg)`;
+            document.getElementById('min').style.transform = `rotate(${minDegrees}deg)`;
+            document.getElementById('hour').style.transform = `rotate(${hourDegrees}deg)`;
+
+            // --- 日曆更新 ---
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const dayNames = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+            const day = dayNames[now.getDay()];
+
+            // 月份與日期補零，視覺更工整
+            const formatMonth = month < 10 ? '0' + month : month;
+            const formatDate = date < 10 ? '0' + date : date;
+
+            document.getElementById('cal-month').innerText = `${formatMonth} MONTH`;
+            document.getElementById('cal-date').innerText = formatDate;
+            document.getElementById('cal-day').innerText = day;
+        }
+
+        // 每秒執行一次
+        setInterval(updateClock, 1000);
+        
+        // 初始化先執行一次
+        updateClock();
+    </script>
+</body>
+</html>
